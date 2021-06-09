@@ -7,15 +7,20 @@ namespace CinemaSchedule
     public class GraphTree
     {
         List<Film> movieList;
-        int movieListDuration;
+        int movieListDuration = 0;
 
         Node root;
         public List<TimeTable> allTablesWithFreeTime = new List<TimeTable>();
+
+        public GraphTree()
+        {
+
+        }
         public GraphTree(List<Film> list, int FreeTime)
         {
             movieList = list;
             movieListDuration = CalcMovieListDuration(movieList);
-            if (movieListDuration<840)
+            if (movieListDuration < 840)
             {
                 root = new Node(FreeTime, new List<Film>(movieList));
                 root.RemainingTime -= movieListDuration;
@@ -87,8 +92,6 @@ namespace CinemaSchedule
             }
             return optimalTable;
         }
-
-
     }
 }
 
