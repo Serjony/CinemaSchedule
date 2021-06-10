@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace CinemaSchedule
 {
     public class GraphTree
     {
-        List<Film> movieList;
-        int movieListDuration = 0;
-
-        Node root;
+        private List<Film> movieList;
+        private int movieListDuration = 0;
+        private Node root;
         public List<TimeTable> allTablesWithFreeTime = new List<TimeTable>();
 
         public GraphTree()
@@ -20,7 +17,7 @@ namespace CinemaSchedule
         {
             movieList = list;
             movieListDuration = CalcMovieListDuration(movieList);
-            if (movieListDuration < 840)
+            if (movieListDuration < CinemaWorkTime.CinemaWorkingTime)
             {
                 root = new Node(FreeTime, new List<Film>(movieList));
                 root.RemainingTime -= movieListDuration;
@@ -57,30 +54,20 @@ namespace CinemaSchedule
                     CreateGraph(newNode);
                 }
             }
-
-            bool b = true;
-            foreach (var item in movieList)
+            TimeTable currentTable = new TimeTable();
+            currentTable.FreeTime = node.RemainingTime;
+            currentTable.Table = new List<Film>();
+            foreach (var value in node.CurrentFilms)
             {
-                if (node.RemainingTime >= item.Duration)
-                { b = false; }
+                currentTable.Table.Add(new Film { Name = value.Name, Duration = value.Duration });
             }
-            if (b)
-            {
-                TimeTable currentTable = new TimeTable();
-                currentTable.FreeTime = node.RemainingTime;
-                currentTable.Table = new List<Film>();
-                foreach (var value in node.CurrentFilms)
-                {
-                    currentTable.Table.Add(new Film { Name = value.Name, Duration = value.Duration });
-                }
-                allTablesWithFreeTime.Add(currentTable);
-            }
+            allTablesWithFreeTime.Add(currentTable);
         }
 
         public TimeTable FindOptimalTable()
         {
             List<TimeTable> result = new List<TimeTable>(allTablesWithFreeTime);
-            int minFreeTime = 840;
+            int minFreeTime = CinemaWorkTime.CinemaWorkingTime;
             TimeTable optimalTable = new TimeTable();
             foreach (var item in result)
             {

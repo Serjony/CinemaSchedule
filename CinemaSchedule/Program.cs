@@ -7,7 +7,6 @@ namespace CinemaSchedule
     {
         static void Main(string[] args)
         {
-            int cinemaWorkingMinutes = 840;
             List<Film> userFilmsList = new List<Film>();
             int filmCount;
 
@@ -23,7 +22,7 @@ namespace CinemaSchedule
                 userFilmsList.Add(new Film { Duration = fDuration, Name = fName });
             }
 
-            GraphTree cinemaTable = new GraphTree(userFilmsList, cinemaWorkingMinutes);
+            GraphTree cinemaTable = new GraphTree(userFilmsList, CinemaWorkTime.CinemaWorkingTime);
             cinemaTable.CreateTree();
             TimeTable optimalTable = cinemaTable.FindOptimalTable();
             PrintSchedule.PrintTable(optimalTable);
